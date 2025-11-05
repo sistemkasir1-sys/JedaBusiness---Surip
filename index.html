@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>POS Cafe - Realtime</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <!-- Firebase compat SDK (simple integration) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+</head>
+<body>
+  <main id="app">
+    <!-- LOGIN -->
+    <section id="loginPage" class="page center">
+      <div class="card login-card">
+        <h1>POS Cafe</h1>
+        <p class="muted">Login menggunakan Email & Password</p>
+        <input id="email" type="email" placeholder="Email" />
+        <input id="password" type="password" placeholder="Password" />
+        <button id="btnLogin">Login</button>
+        <p id="loginMsg" class="muted small"></p>
+      </div>
+    </section>
+
+    <!-- DASHBOARD (Admin) -->
+    <section id="adminPage" class="page hidden">
+      <header class="header">
+        <h2>Dashboard Admin</h2>
+        <div>
+          <button id="btnLogout">Logout</button>
+        </div>
+      </header>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Ringkasan</h3>
+          <div class="metrics">
+            <div><small>Pendapatan Kotor</small><div id="pendapatanKotor">Rp0</div></div>
+            <div><small>Total Modal (HPP)</small><div id="totalModal">Rp0</div></div>
+            <div><small>Laba Kotor</small><div id="labaKotor">Rp0</div></div>
+            <div><small>Biaya Operasional</small><div id="biayaOperasional">Rp0</div></div>
+            <div><small>Laba Bersih</small><div id="labaBersih">Rp0</div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Manajemen Bahan</h3>
+          <div id="bahanList"></div>
+          <hr/>
+          <input id="bahanName" placeholder="Nama bahan (id key)" />
+          <input id="bahanHarga" type="number" placeholder="Harga Beli (Rp)" />
+          <input id="bahanStok" type="number" placeholder="Stok (angka)" />
+          <input id="bahanSatuan" placeholder="satuan (gr/ml/pcs)" />
+          <button id="btnTambahBahan">Tambah / Update Bahan</button>
+        </div>
+
+        <div class="card">
+          <h3>Manajemen Produk</h3>
+          <div id="produkList"></div>
+          <hr/>
+          <input id="produkId" placeholder="produk_id (unik)" />
+          <input id="produkNama" placeholder="Nama produk" />
+          <input id="produkHarga" type="number" placeholder="Harga jual (Rp)" />
+          <textarea id="produkResep" placeholder='Resep JSON (contoh: {"arabika":14,"susu":120})'></textarea>
+          <button id="btnTambahProduk">Tambah / Update Produk</button>
+        </div>
+
+        <div class="card">
+          <h3>Biaya Operasional</h3>
+          <div id="operasionalList"></div>
+          <input id="opJenis" placeholder="Jenis" />
+          <input id="opBiaya" type="number" placeholder="Biaya (Rp)" />
+          <input id="opTanggal" type="date" />
+          <button id="btnTambahOp">Tambah Biaya</button>
+        </div>
+      </div>
+
+      <div class="card full">
+        <h3>Riwayat Transaksi (semua)</h3>
+        <div id="riwayatAdmin"></div>
+      </div>
+    </section>
+
+    <!-- KASIR PAGE -->
+    <section id="kasirPage" class="page hidden">
+      <header class="header">
+        <h2>Kasir - POS</h2>
+        <div>
+          <span id="kasirName"></span>
+          <button id="btnLogout2">Logout</button>
+        </div>
+      </header>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Daftar Produk</h3>
+          <div id="produkForKasir"></div>
+        </div>
+
+        <div class="card">
+          <h3>Keranjang</h3>
+          <div id="cartList"></div>
+          <div class="row">
+            <label>Metode Pembayaran</label>
+            <select id="metodeBayar"><option value="Cash">Cash</option><option value="Transfer">Transfer</option><option value="QRIS">QRIS</option></select>
+            <div id="qrisControls" class="hidden">
+              <input id="filePhoto" type="file" accept="image/*" capture="environment" />
+              <button id="btnAmbilFoto">📷 Ambil Foto Bukti</button>
+            </div>
+          </div>
+          <div class="row">
+            <div><small>Total</small><div id="totalBayar">Rp0</div></div>
+          </div>
+          <button id="btnBayar">Simpan Transaksi</button>
+        </div>
+      </div>
+
+      <div class="card full">
+        <h3>Riwayat Transaksi Saya</h3>
+        <div id="riwayatKasir"></div>
+      </div>
+    </section>
+
+    <!-- Modal bukti -->
+    <div id="modal" class="modal hidden">
+      <div class="modal-content">
+        <button id="modalClose">✕</button>
+        <div id="modalBody"></div>
+      </div>
+    </div>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>
